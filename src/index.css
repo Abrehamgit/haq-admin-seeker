@@ -1,3 +1,6 @@
+@import url("https://fonts.googleapis.com/css?family=Karla");
+@import "~antd/dist/antd.css";
+
 @font-face {
 	font-family: "radnika_next";
 	src: url("/static/radnikanext-medium-webfont.woff2") format("woff2");
@@ -6,8 +9,9 @@
 }
 
 html {
-	font-size: 10px;
+	font-size: 16px;
 }
+
 body {
 	margin: 0;
 	padding: 0;
