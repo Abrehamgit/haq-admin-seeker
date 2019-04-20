@@ -7,35 +7,33 @@ import { BrowserRouter as Router } from "react-router-dom";
 import "./index.css";
 import AuthProvider from "./context/AuthProvider";
 import { AuthContext } from "./context/AuthProvider";
-import AdminDashboardRouter from "./routers/AdminDashboardRouter";
-import SeekerDashboardRouter from "./routers/SeekerDashboardRouter";
+import AdminDashboardRouter from "./routers/adminDashboardRouter";
+import SeekerDashboardRouter from "./routers/seekerDashboardRouter";
 import Spinner from "./components/Spinner/Spinner";
 
 const FinalRouter = ({ permission }) => {
-	let output = <Spinner />;
-	if (permission === "admin") {
-		output = (
-			<Router>
-				{" "}
-				<AdminDashboardRouter />{" "}
-			</Router>
-		);
-	} else if (permission === "seeker") {
-		output = (
-			<Router>
-				{" "}
-				<SeekerDashboardRouter />{" "}
-			</Router>
-		);
-	}
-	return output;
+  let output = <Spinner />;
+  if (permission === "admin") {
+    output = (
+      <Router>
+        <AdminDashboardRouter />
+      </Router>
+    );
+  } else if (permission === "seeker") {
+    output = (
+      <Router>
+        <SeekerDashboardRouter />
+      </Router>
+    );
+  }
+  return output;
 };
 
 ReactDOM.render(
-	<AuthProvider>
-		<AuthContext.Consumer>
-			{context => <FinalRouter permission={context.permission} />}
-		</AuthContext.Consumer>
-	</AuthProvider>,
-	document.getElementById("root")
+  <AuthProvider>
+    <AuthContext.Consumer>
+      {context => <FinalRouter permission={context.permission} />}
+    </AuthContext.Consumer>
+  </AuthProvider>,
+  document.getElementById("root")
 );
