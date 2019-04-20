@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
+import logo from "../../assets/logo.png";
 import styles from "./index.module.css";
 
 class NavBar extends Component {
@@ -9,28 +10,21 @@ class NavBar extends Component {
         <div className={styles["nav-bar-inner"]}>
           <div className={styles["logo"]}>
             {" "}
-            <h1> ሃቅ </h1>{" "}
+            <img src={logo} alt="HAQ" />
           </div>
           <div className={styles["items"]}>
-            <NavLink
-              exact={true}
-              className={styles["item"]}
-              activeClassName={styles["active-link"]}
-              activeStyle={{ textDecoration: "none" }}
-              style={{ textDecoration: "none" }}
-              to="/"
-            >
-              <h4> REPORTS</h4>
-            </NavLink>
-
-            <NavLink
-              exact={true}
-              className={styles["item"]}
-              activeClassName={styles["active-link"]}
-              to="/seekers"
-            >
-              <h4> SEEKERS</h4>
-            </NavLink>
+            {this.props.tabs.map(item => (
+              <NavLink
+                exact={true}
+                className={styles["item"]}
+                activeClassName={styles["active-link"]}
+                activeStyle={{ textDecoration: "none" }}
+                style={{ textDecoration: "none" }}
+                to={item.to}
+              >
+                <h4> {item.title}</h4>
+              </NavLink>
+            ))}
           </div>
         </div>
         <div className={styles["sign-out"]}>

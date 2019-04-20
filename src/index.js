@@ -5,6 +5,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 // import "bootstrap/dist/css/bootstrap.min.css";
 // import "mdbreact/dist/css/mdb.css";
 import "./index.css";
+import "antd/dist/antd.css";
 import AuthProvider from "./context/AuthProvider";
 import { AuthContext } from "./context/AuthProvider";
 import AdminDashboardRouter from "./routers/AdminDashboardRouter";
