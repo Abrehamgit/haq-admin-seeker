@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
+import { Icon } from "antd";
 import logo from "../../assets/logo.png";
 import styles from "./index.module.css";
 
@@ -29,6 +30,7 @@ class NavBar extends Component {
         </div>
         <div className={styles["sign-out"]}>
           <p> Signout </p>
+          <Icon type="sign-out-alt" />
         </div>
       </div>
     );

@@ -5,7 +5,7 @@ const inputStyles = {
   fontSize: "14px",
   boxShadow: " 0px 1px 5px rgba(42, 49, 55, 0.05)",
   borderRadius: "6px",
-  color: "rgba(42, 49, 55, 0.9)",
+  color: "rgba(42, 49, 55, 0.7)",
   fontWeight: "700"
 };
 
