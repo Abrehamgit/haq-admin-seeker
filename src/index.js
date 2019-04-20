@@ -1,12 +1,41 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import React from "react";
+import ReactDOM from "react-dom";
+import { BrowserRouter as Router } from "react-router-dom";
+// import "font-awesome/css/font-awesome.min.css";
+// import "bootstrap/dist/css/bootstrap.min.css";
+// import "mdbreact/dist/css/mdb.css";
+import "./index.css";
+import AuthProvider from "./context/AuthProvider";
+import { AuthContext } from "./context/AuthProvider";
+import AdminDashboardRouter from "./routers/AdminDashboardRouter";
+import SeekerDashboardRouter from "./routers/SeekerDashboardRouter";
+import Spinner from "./components/Spinner/Spinner";
 
-ReactDOM.render(<App />, document.getElementById('root'));
+const FinalRouter = ({ permission }) => {
+	let output = <Spinner />;
+	if (permission === "admin") {
+		output = (
+			<Router>
+				{" "}
+				<AdminDashboardRouter />{" "}
+			</Router>
+		);
+	} else if (permission === "seeker") {
+		output = (
+			<Router>
+				{" "}
+				<SeekerDashboardRouter />{" "}
+			</Router>
+		);
+	}
+	return output;
+};
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+ReactDOM.render(
+	<AuthProvider>
+		<AuthContext.Consumer>
+			{context => <FinalRouter permission={context.permission} />}
+		</AuthContext.Consumer>
+	</AuthProvider>,
+	document.getElementById("root")
+);
