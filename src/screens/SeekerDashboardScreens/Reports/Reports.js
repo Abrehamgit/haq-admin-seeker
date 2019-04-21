@@ -1,13 +1,11 @@
 import React, { Component } from "react";
 import Iframe from "react-iframe";
 import { FacebookProvider, EmbeddedPost } from "react-facebook";
-import { Card, Icon, message } from "antd";
-import { Tabs } from "antd";
+import { Card, Icon } from "antd";
+import { Tabs, message } from "antd";
 import { List } from "antd";
-import { Modal } from "antd";
+import { Modal, Spin } from "antd";
 import Image from "../../../assets/undraw_under_construction_46pa.svg";
-import styles from "./index.module.css";
-import Spinner from "../../../components/Spinner/Spinner";
 import {
   Drawer,
   Form,
@@ -18,38 +16,26 @@ import {
   Select,
   DatePicker
 } from "antd";
+import styles from "./index.module.css";
 import axios from "axios";
+import Spinner from "../../../components/Spinner/Spinner";
+
 const confirm = Modal.confirm;
+
+const FormItem = Form.Item;
 
 const TabPane = Tabs.TabPane;
 
 const { Option } = Select;
-const data = [
-  {
-    title: "Title 1"
-  },
-  {
-    title: "Title 2"
-  },
-  {
-    title: "Title 3"
-  },
-  {
-    title: "Title 4"
-  },
-  {
-    title: "Title 5"
-  },
-  {
-    title: "Title 6"
-  }
-];
+
 let str = "Visit W3Schools!";
 let n = str.search("W3Schools");
+let data = ["sdf", "Saf", "sdfsdf"];
 class Reports extends Component {
   state = {
     visible: false,
-    tabPosition: "left"
+    tabPosition: "left",
+    reports: []
   };
 
   showDrawer = () => {
@@ -91,44 +77,52 @@ class Reports extends Component {
   };
 
   state = {
-    loading: false,
-    location: "Addis Ababa",
-    reportId: "",
-    postUrl: ""
+    review: "",
+    loading: true
   };
 
   componentDidMount() {
-    this.setState({ loading: true });
     setTimeout(() => {
       this.setState({ loading: false });
-    }, 2000);
-  }
-
-  handleLocChange = value => {
-    this.setState({ location: value });
-  };
-  submitLocation = () => {
-    message.loading("Sending report to fact checkers...", 0);
+    }, 3000);
     axios({
       method: "post",
-      url: "https://fake-news-backend.herokuapp.com/report/send",
+      url: "https://fake-news-backend.herokuapp.com/report/seeker",
       data: {
-        reportId: "39985e55-291e-4a86-ac8c-109e67b93d6f",
-        location: this.state.location
+        id: "39985e55-291e-4a86-ac8c-109e67b93d6f"
+      }
+    }).then(reponse => {
+      console.log(reponse);
+      // let reports = response.data.rows;
+    });
+  }
+
+  handleChange = e => {
+    const value = e.target.value;
+    this.setState({ review: value });
+  };
+
+  submitReview = () => {
+    message.loading("Submitting your review...", 0);
+    axios({
+      method: "post",
+      url: "https://fake-news-backend.herokuapp.com/fakenews",
+      data: {
+        reportId: "2539ad32-8e4c-491d-b708-7b3b18f491ae",
+        seekerId: "39985e55-291e-4a86-ac8c-109e67b93d6f",
+        evidence: "this is the review"
       }
     })
-      .then(reponse => {
-        console.log(reponse);
-        if (reponse.data) {
+      .then(response => {
+        console.log(response);
+        if (response.data) {
           message.destroy();
-          message.success("Report sucessfully redirected to fact checkers.");
+          message.success("your review as been submitted. Thanks!");
           this.setState({ visible: false });
         }
       })
-      .catch(error => {
-        console.log(error);
-        message.destroy();
-        message.error("Something went wrong.");
+      .catch(e => {
+        console.log(e);
       });
   };
 
@@ -167,11 +161,7 @@ class Reports extends Component {
                   renderItem={item => (
                     <List.Item>
                       <Card
-                        style={{
-                          width: "100%",
-                          marginBottom: "50px",
-                          marginRight: "30px"
-                        }}
+                        style={{ width: "100%" }}
                         cover={
                           <Iframe
                             url={`https://www.youtube.com/embed/${this.getYoutube(
@@ -185,17 +175,17 @@ class Reports extends Component {
                           />
                         }
                         actions={[
-                          <Icon
-                            type="plus-circle"
+                          <div
                             style={{
-                              fontWeight: 500,
-                              fontSize: 25,
-                              color: "#81a3d3"
+                              width: "100%"
                             }}
                             onClick={() => {
                               this.showDrawer();
                             }}
-                          />,
+                          >
+                            {" "}
+                            <h3> Review </h3>{" "}
+                          </div>,
                           <Icon
                             type="delete"
                             style={{
@@ -234,21 +224,20 @@ class Reports extends Component {
                   }}
                   dataSource={data}
                   renderItem={item => (
-                    <List.Item
-                      style={{ marginBottom: "50px", marginRight: "30px" }}
-                    >
+                    <List.Item>
                       <Card
-                        style={{
-                          width: "100%"
-                        }}
+                        style={{ width: "500px" }}
                         cover={
                           <FacebookProvider
                             appId="418837532009114"
                             className="iframe"
+                            style={{
+                              height: "350px"
+                            }}
                           >
                             <EmbeddedPost
                               href="https://www.facebook.com/BestofGameofThrones/photos/a.652975884758197/2124405004281937/?type=3&eid=ARDip30nYiI3Nzp_jUqPggK94tOb1TIQNBIitYuBjSJXVjfJOhDsNvqdeAwrniUJ1R599KI1OpDxHgMR&__xts__%5B0%5D=68.ARBNvhEHUfWjmJKFYOzvLgyJ7NEMSIRhPTB77Y68htVYjR7keChuL6TkzWTNwzUkBD5NlSO1gyKwTXmGAbaCi13pa2euyrzLqIO_W8KiUWFBTldT7D-Gk4UjtZfJwNxrGvUo27F-dX52me2v0oU6Z0cHl3cEqWUbQX1HwoxFUt7eMfrM7rfm9xfyb3UoQ_bTRu8nRU6PwFHo74a8uzRfvibhIYaO6SVEwirWOfdse-7iwoId3aEU41o2Wf69KUz5MJ-28_hn02BY27H0wM5k6Ckvk97EBE9anxG0V9oV8_4AFBLcTqz99LS8yRuqu07a-WcWBNsNW38OM50uQ-B3Om-4lg&__tn__=EEHH-R"
-                              width="500px"
+                              width="400px"
                               height="350px"
                               id="myId"
                               display="initial"
@@ -257,17 +246,17 @@ class Reports extends Component {
                           </FacebookProvider>
                         }
                         actions={[
-                          <Icon
-                            type="plus-circle"
+                          <div
                             style={{
-                              fontWeight: 500,
-                              fontSize: 25,
-                              color: "#81a3d3"
+                              width: "100%"
                             }}
                             onClick={() => {
                               this.showDrawer();
                             }}
-                          />,
+                          >
+                            {" "}
+                            <h3> Review </h3>{" "}
+                          </div>,
                           <Icon
                             type="delete"
                             style={{
@@ -305,7 +294,7 @@ class Reports extends Component {
           </div>
         </div>
         <Drawer
-          title="Assign a possible fake news a location"
+          title="Review"
           width={520}
           onClose={this.showDrawer}
           visible={this.state.visible}
@@ -333,54 +322,56 @@ class Reports extends Component {
               position="relative"
             />
           )}
-          <Form layout="vertical" hideRequiredMark>
-            <Row gutter={16}>
-              <Col span={24}>
-                <Form.Item label="News Location">
-                  <Select
-                    showSearch
-                    style={{ width: "100%" }}
-                    placeholder="Select a location"
-                    optionFilterProp="children"
-                    onChange={this.handleLocChange}
-                    filterOption={(input, option) =>
-                      option.props.children
-                        .toLowerCase()
-                        .indexOf(input.toLowerCase()) >= 0
-                    }
-                  >
-                    <Option value="General">General</Option>
-                    <Option value="Addis Ababa">Addis Ababa</Option>
-                    <Option value="Adama">Adama</Option>
-                    <Option value="Hawassa">Hawassa </Option>
-                    <Option value="Bahirdar">Bahirdar</Option>
-                    <Option value="Harar">Harar </Option>
-                    <Option value="Mekelle">Mekelle</Option>
-                    <Option value="Jimma">Jimma</Option>
-                  </Select>
-                </Form.Item>
-              </Col>
-            </Row>
-          </Form>
-          <div
-            style={{
-              position: "absolute",
-              left: 0,
-              bottom: 0,
-              width: "100%",
-              borderTop: "1px solid #e9e9e9",
-              padding: "10px 16px",
-              background: "#fff",
-              textAlign: "right"
-            }}
-          >
-            <Button onClick={this.showDrawer} style={{ marginRight: 8 }}>
-              Cancel
-            </Button>
-            <Button onClick={this.submitLocation} type="primary">
-              Submit
-            </Button>
-          </div>
+          <Spin spinning={this.state.submitting}>
+            <Form
+              layout="vertical"
+              hideRequiredMark
+              style={{ marginTop: "35px" }}
+            >
+              <FormItem>
+                <h4 className={styles["label"]}>
+                  {" "}
+                  Please give an evidence to why this is fake{" "}
+                </h4>
+
+                <Input.TextArea
+                  rows={8}
+                  type="text"
+                  name="review"
+                  value={this.state.review}
+                  onChange={this.handleChange}
+                  style={{
+                    background: "#FFFFFF",
+                    width: "100%",
+                    fontSize: "14px",
+                    boxShadow: " 0px 1px 5px rgba(42, 49, 55, 0.05)",
+                    borderRadius: "6px",
+                    color: "rgba(42, 49, 55, 0.7)",
+                    fontWeight: "700"
+                  }}
+                />
+              </FormItem>
+            </Form>
+            <div
+              style={{
+                position: "absolute",
+                left: 0,
+                bottom: 0,
+                width: "100%",
+                borderTop: "1px solid #e9e9e9",
+                padding: "10px 16px",
+                background: "#fff",
+                textAlign: "right"
+              }}
+            >
+              <Button onClick={this.showDrawer} style={{ marginRight: 8 }}>
+                Cancel
+              </Button>
+              <Button onClick={this.submitReview} type="primary">
+                Submit
+              </Button>
+            </div>
+          </Spin>
         </Drawer>
       </div>
     );
