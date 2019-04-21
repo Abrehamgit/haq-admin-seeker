@@ -5,8 +5,8 @@ import "./index.css";
 import "antd/dist/antd.css";
 import AuthProvider from "./context/AuthProvider";
 import { AuthContext } from "./context/AuthProvider";
-import AdminDashboardRouter from "./routers/adminDashboardRouter";
-import SeekerDashboardRouter from "./routers/seekerDashboardRouter";
+import AdminDashboardRouter from "./routers/AdminDashboardRouter";
+import SeekerDashboardRouter from "./routers/SeekerDashboardRouter";
 import Spinner from "./components/Spinner/Spinner";
 
 const FinalRouter = ({ permission }) => {

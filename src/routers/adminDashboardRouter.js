@@ -10,11 +10,11 @@ const tabs = [
 		to: "/"
 	},
 	{
-		title: "SEEKERS",
+		title: "FACT CHECKERS",
 		to: "/seekers"
 	},
 	{
-		title: "CREATE SEEKER",
+		title: "CREATE FACT CHECKER",
 		to: "/createSeeker"
 	}
 ];

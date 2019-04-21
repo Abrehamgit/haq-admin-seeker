@@ -30,7 +30,6 @@ class NavBar extends Component {
         </div>
         <div className={styles["sign-out"]}>
           <p> Signout </p>
-          <Icon type="sign-out-alt" />
         </div>
       </div>
     );

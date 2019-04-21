@@ -1,16 +1,24 @@
 import React from "react";
 import { Switch, Route } from "react-router";
-import Reports from "../screens/seekerDashboardScreens/reports/reports";
-// import NavBar from "../components/NavBar/NavBar";
+import Reports from "../screens/SeekerDashboardScreens/Reports/Reports";
+import NavBar from "../components/NavBar/NavBar";
 
-const AdminDashboardRouter = props => {
-  return (
-    <div>
-      <Switch>
-        <Route exact path="/" render={props => <Reports />} />
-      </Switch>
-    </div>
-  );
+const tabs = [
+	{
+		title: "REPORTS",
+		to: "/"
+	}
+];
+
+const SeeekerDashboardRouter = props => {
+	return (
+		<div>
+			<NavBar tabs={tabs} />
+			<Switch>
+				<Route exact path="/" render={props => <Reports />} />
+			</Switch>
+		</div>
+	);
 };
 
-export default AdminDashboardRouter;
+export default SeeekerDashboardRouter;
