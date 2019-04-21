@@ -4,10 +4,8 @@ import { FacebookProvider, EmbeddedPost } from "react-facebook";
 import { Card, Icon } from "antd";
 import { Tabs } from "antd";
 import { List } from "antd";
-import { Modal } from "antd";
+import { Modal, Spin } from "antd";
 import Image from "../../../assets/undraw_under_construction_46pa.svg";
-import styles from "./index.module.css";
-import Spinner from "../../../components/Spinner/Spinner";
 import {
   Drawer,
   Form,
@@ -18,7 +16,12 @@ import {
   Select,
   DatePicker
 } from "antd";
+import styles from "./index.module.css";
+import axios from "axios";
+
 const confirm = Modal.confirm;
+
+const FormItem = Form.Item;
 
 const TabPane = Tabs.TabPane;
 
@@ -90,20 +93,24 @@ class Reports extends Component {
   };
 
   state = {
-    loading: false
+    review: "",
+    submitting: false
   };
 
-  componentDidMount() {
-    this.setState({ loading: true });
-    setTimeout(() => {
-      this.setState({ loading: false });
-    }, 2000);
-  }
+  handleChange = e => {
+    const value = e.target.value;
+    this.setState({ review: value });
+  };
+
+  submit = () => {
+    this.setState({ submitting: true });
+    axios({
+      method: "post",
+      url: ""
+    });
+  };
 
   render() {
-    if (this.state.loading) {
-      return <Spinner />;
-    }
     return (
       <div>
         <div className={styles["container"]}>
@@ -135,11 +142,7 @@ class Reports extends Component {
                   renderItem={item => (
                     <List.Item>
                       <Card
-                        style={{
-                          width: "100%",
-                          marginBottom: "50px",
-                          marginRight: "30px"
-                        }}
+                        style={{ width: "100%" }}
                         cover={
                           <Iframe
                             url={`https://www.youtube.com/embed/${this.getYoutube(
@@ -202,21 +205,20 @@ class Reports extends Component {
                   }}
                   dataSource={data}
                   renderItem={item => (
-                    <List.Item
-                      style={{ marginBottom: "50px", marginRight: "30px" }}
-                    >
+                    <List.Item>
                       <Card
-                        style={{
-                          width: "100%"
-                        }}
+                        style={{ width: "500px" }}
                         cover={
                           <FacebookProvider
                             appId="418837532009114"
                             className="iframe"
+                            style={{
+                              height: "350px"
+                            }}
                           >
                             <EmbeddedPost
                               href="https://www.facebook.com/BestofGameofThrones/photos/a.652975884758197/2124405004281937/?type=3&eid=ARDip30nYiI3Nzp_jUqPggK94tOb1TIQNBIitYuBjSJXVjfJOhDsNvqdeAwrniUJ1R599KI1OpDxHgMR&__xts__%5B0%5D=68.ARBNvhEHUfWjmJKFYOzvLgyJ7NEMSIRhPTB77Y68htVYjR7keChuL6TkzWTNwzUkBD5NlSO1gyKwTXmGAbaCi13pa2euyrzLqIO_W8KiUWFBTldT7D-Gk4UjtZfJwNxrGvUo27F-dX52me2v0oU6Z0cHl3cEqWUbQX1HwoxFUt7eMfrM7rfm9xfyb3UoQ_bTRu8nRU6PwFHo74a8uzRfvibhIYaO6SVEwirWOfdse-7iwoId3aEU41o2Wf69KUz5MJ-28_hn02BY27H0wM5k6Ckvk97EBE9anxG0V9oV8_4AFBLcTqz99LS8yRuqu07a-WcWBNsNW38OM50uQ-B3Om-4lg&__tn__=EEHH-R"
-                              width="500px"
+                              width="400px"
                               height="350px"
                               id="myId"
                               display="initial"
@@ -273,7 +275,7 @@ class Reports extends Component {
           </div>
         </div>
         <Drawer
-          title="Assign a possible fake news a location"
+          title="Review"
           width={520}
           onClose={this.showDrawer}
           visible={this.state.visible}
@@ -301,44 +303,56 @@ class Reports extends Component {
               position="relative"
             />
           )}
-          <Form layout="vertical" hideRequiredMark>
-            <Row gutter={16}>
-              <Col span={24}>
-                <Form.Item label="News Location">
-                  <Select placeholder="Please choose the Location">
-                    <Option value="Addis_Ababa">Addis Ababa</Option>
-                    <Option value="Adama">Adama</Option>
-                    <Option value="Addis_Ababa1">Addis Ababa</Option>
-                    <Option value="Adama1">Adama</Option>
-                    <Option value="Addis_Ababa2">Addis Ababa</Option>
-                    <Option value="Adama2">Adama</Option>
-                    <Option value="Addis_Ababa3">Addis Ababa</Option>
-                    <Option value="Adama3">Adama</Option>
-                    <Option value="other">Other</Option>
-                  </Select>
-                </Form.Item>
-              </Col>
-            </Row>
-          </Form>
-          <div
-            style={{
-              position: "absolute",
-              left: 0,
-              bottom: 0,
-              width: "100%",
-              borderTop: "1px solid #e9e9e9",
-              padding: "10px 16px",
-              background: "#fff",
-              textAlign: "right"
-            }}
-          >
-            <Button onClick={this.showDrawer} style={{ marginRight: 8 }}>
-              Cancel
-            </Button>
-            <Button onClick={this.showDrawer} type="primary">
-              Submit
-            </Button>
-          </div>
+          <Spin spinning={this.state.submitting}>
+            <Form
+              layout="vertical"
+              hideRequiredMark
+              style={{ marginTop: "35px" }}
+            >
+              <FormItem>
+                <h4 className={styles["label"]}>
+                  {" "}
+                  Please give an evidence to why this is fake{" "}
+                </h4>
+
+                <Input.TextArea
+                  rows={8}
+                  type="text"
+                  name="review"
+                  value={this.state.review}
+                  onChange={this.handleChange}
+                  style={{
+                    background: "#FFFFFF",
+                    width: "100%",
+                    fontSize: "14px",
+                    boxShadow: " 0px 1px 5px rgba(42, 49, 55, 0.05)",
+                    borderRadius: "6px",
+                    color: "rgba(42, 49, 55, 0.7)",
+                    fontWeight: "700"
+                  }}
+                />
+              </FormItem>
+            </Form>
+            <div
+              style={{
+                position: "absolute",
+                left: 0,
+                bottom: 0,
+                width: "100%",
+                borderTop: "1px solid #e9e9e9",
+                padding: "10px 16px",
+                background: "#fff",
+                textAlign: "right"
+              }}
+            >
+              <Button onClick={this.showDrawer} style={{ marginRight: 8 }}>
+                Cancel
+              </Button>
+              <Button onClick={this.submitReview} type="primary">
+                Submit
+              </Button>
+            </div>
+          </Spin>
         </Drawer>
       </div>
     );
