@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Iframe from "react-iframe";
 import { FacebookProvider, EmbeddedPost } from "react-facebook";
 import { Card, Icon } from "antd";
-import { Tabs } from "antd";
+import { Tabs, message } from "antd";
 import { List } from "antd";
 import { Modal, Spin } from "antd";
 import Image from "../../../assets/undraw_under_construction_46pa.svg";
@@ -26,32 +26,15 @@ const FormItem = Form.Item;
 const TabPane = Tabs.TabPane;
 
 const { Option } = Select;
-const data = [
-	{
-		title: "Title 1"
-	},
-	{
-		title: "Title 2"
-	},
-	{
-		title: "Title 3"
-	},
-	{
-		title: "Title 4"
-	},
-	{
-		title: "Title 5"
-	},
-	{
-		title: "Title 6"
-	}
-];
+
 let str = "Visit W3Schools!";
 let n = str.search("W3Schools");
+let data = ["sdf", "Saf", "sdfsdf"];
 class Reports extends Component {
 	state = {
 		visible: false,
-		tabPosition: "left"
+		tabPosition: "left",
+		reports: []
 	};
 
 	showDrawer = () => {
@@ -97,17 +80,46 @@ class Reports extends Component {
 		submitting: false
 	};
 
+	componentDidMount() {
+		axios({
+			method: "post",
+			url: "https://fake-news-backend.herokuapp.com/report/seeker",
+			data: {
+				id: "39985e55-291e-4a86-ac8c-109e67b93d6f"
+			}
+		}).then(reponse => {
+			console.log(reponse);
+			// let reports = response.data.rows;
+		});
+	}
+
 	handleChange = e => {
 		const value = e.target.value;
 		this.setState({ review: value });
 	};
 
-	submit = () => {
-		this.setState({ submitting: true });
+	submitReview = () => {
+		message.loading("Submitting your review...", 0);
 		axios({
 			method: "post",
-			url: ""
-		});
+			url: "https://fake-news-backend.herokuapp.com/fakenews",
+			data: {
+				reportId: "2539ad32-8e4c-491d-b708-7b3b18f491ae",
+				seekerId: "39985e55-291e-4a86-ac8c-109e67b93d6f",
+				evidence: "this is the review"
+			}
+		})
+			.then(response => {
+				console.log(response);
+				if (response.data) {
+					message.destroy();
+					message.success("your review as been submitted. Thanks!");
+					this.setState({ visible: false });
+				}
+			})
+			.catch(e => {
+				console.log(e);
+			});
 	};
 
 	render() {
@@ -156,17 +168,17 @@ class Reports extends Component {
 													/>
 												}
 												actions={[
-													<Icon
-														type="plus-circle"
+													<div
 														style={{
-															fontWeight: 500,
-															fontSize: 25,
-															color: "#81a3d3"
+															width: "100%"
 														}}
 														onClick={() => {
 															this.showDrawer();
 														}}
-													/>,
+													>
+														{" "}
+														<h3> Review </h3>{" "}
+													</div>,
 													<Icon
 														type="delete"
 														style={{
@@ -229,17 +241,17 @@ class Reports extends Component {
 													</FacebookProvider>
 												}
 												actions={[
-													<Icon
-														type="plus-circle"
+													<div
 														style={{
-															fontWeight: 500,
-															fontSize: 25,
-															color: "#81a3d3"
+															width: "100%"
 														}}
 														onClick={() => {
 															this.showDrawer();
 														}}
-													/>,
+													>
+														{" "}
+														<h3> Review </h3>{" "}
+													</div>,
 													<Icon
 														type="delete"
 														style={{

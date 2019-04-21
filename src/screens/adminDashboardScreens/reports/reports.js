@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Iframe from "react-iframe";
 import { FacebookProvider, EmbeddedPost } from "react-facebook";
-import { Card, Icon } from "antd";
+import { Card, Icon, message } from "antd";
 import { Tabs } from "antd";
 import { List } from "antd";
 import { Modal } from "antd";
@@ -18,6 +18,7 @@ import {
   Select,
   DatePicker
 } from "antd";
+import axios from "axios";
 const confirm = Modal.confirm;
 
 const TabPane = Tabs.TabPane;
@@ -90,7 +91,10 @@ class Reports extends Component {
   };
 
   state = {
-    loading: false
+    loading: false,
+    location: "Addis Ababa",
+    reportId: "",
+    postUrl: ""
   };
 
   componentDidMount() {
@@ -99,6 +103,34 @@ class Reports extends Component {
       this.setState({ loading: false });
     }, 2000);
   }
+
+  handleLocChange = value => {
+    this.setState({ location: value });
+  };
+  submitLocation = () => {
+    message.loading("Sending report to fact checkers...", 0);
+    axios({
+      method: "post",
+      url: "https://fake-news-backend.herokuapp.com/report/send",
+      data: {
+        reportId: "39985e55-291e-4a86-ac8c-109e67b93d6f",
+        location: this.state.location
+      }
+    })
+      .then(reponse => {
+        console.log(reponse);
+        if (reponse.data) {
+          message.destroy();
+          message.success("Report sucessfully redirected to fact checkers.");
+          this.setState({ visible: false });
+        }
+      })
+      .catch(error => {
+        console.log(error);
+        message.destroy();
+        message.error("Something went wrong.");
+      });
+  };
 
   render() {
     if (this.state.loading) {
@@ -305,16 +337,26 @@ class Reports extends Component {
             <Row gutter={16}>
               <Col span={24}>
                 <Form.Item label="News Location">
-                  <Select placeholder="Please choose the Location">
-                    <Option value="Addis_Ababa">Addis Ababa</Option>
+                  <Select
+                    showSearch
+                    style={{ width: "100%" }}
+                    placeholder="Select a location"
+                    optionFilterProp="children"
+                    onChange={this.handleLocChange}
+                    filterOption={(input, option) =>
+                      option.props.children
+                        .toLowerCase()
+                        .indexOf(input.toLowerCase()) >= 0
+                    }
+                  >
+                    <Option value="General">General</Option>
+                    <Option value="Addis Ababa">Addis Ababa</Option>
                     <Option value="Adama">Adama</Option>
-                    <Option value="Addis_Ababa1">Addis Ababa</Option>
-                    <Option value="Adama1">Adama</Option>
-                    <Option value="Addis_Ababa2">Addis Ababa</Option>
-                    <Option value="Adama2">Adama</Option>
-                    <Option value="Addis_Ababa3">Addis Ababa</Option>
-                    <Option value="Adama3">Adama</Option>
-                    <Option value="other">Other</Option>
+                    <Option value="Hawassa">Hawassa </Option>
+                    <Option value="Bahirdar">Bahirdar</Option>
+                    <Option value="Harar">Harar </Option>
+                    <Option value="Mekelle">Mekelle</Option>
+                    <Option value="Jimma">Jimma</Option>
                   </Select>
                 </Form.Item>
               </Col>
@@ -335,7 +377,7 @@ class Reports extends Component {
             <Button onClick={this.showDrawer} style={{ marginRight: 8 }}>
               Cancel
             </Button>
-            <Button onClick={this.showDrawer} type="primary">
+            <Button onClick={this.submitLocation} type="primary">
               Submit
             </Button>
           </div>
