@@ -1,0 +1,32 @@
+.container {
+	width: 100vw;
+	display: flex;
+	justify-content: center;
+	margin-top: 150px;
+	margin-bottom: 100px;
+}
+
+.inner {
+	width: 500px;
+	border-radius: 6px;
+	box-shadow: 0px 10px 15px 1px rgba(0, 0, 0, 0.6);
+	display: grid;
+	grid-template-columns: 1fr;
+	padding: 30px;
+}
+
+.inner button {
+	background-color: #1f1142;
+	font-size: 16px;
+	color: white;
+	font-weight: 800;
+	height: 40px;
+	border: none;
+	border-radius: 6px;
+	cursor: pointer;
+}
+
+.inner button:hover {
+	height: 45px;
+	transition: 0.1s;
+}
